@@ -26,9 +26,11 @@
 #include "usart.h"
 #include "gpio.h"
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
+#include <string.h>
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -39,7 +41,7 @@ void proccesDmaData(uint8_t sign);
 //global variables
 int start=0;
 int poc_prijatych=0;
-
+uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
 int pwm_cnt=0;				// PWM
 
@@ -148,7 +150,6 @@ void SystemClock_Config(void)
   LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_1);
 }
 
-char pole[]=" ";
 void proccesDmaData(uint8_t sign)
 {
 	/* Process received data */
@@ -162,11 +163,17 @@ void proccesDmaData(uint8_t sign)
 			pole[poc_prijatych]=sign;
 		}
 
-		if ((poc_prijatych==10 || sign=='$') && start == 1){	//10
+		if ((poc_prijatych==10 || sign=='$') && start == 1)		//ked doslo moc zbytocnych znakov / ukoncovaci
+		{
 					start=0;
 					poc_prijatych=0;
 					memset(pole, 0, strlen(pole));
+					if (sign == '$') 	//iba ked je ukoncovaci
+					{
+						checkForKeyWords();
+					}
 		}
+
 		if (start==1 && sign=='$'){				// konec
 					start=0;
 				}
@@ -174,7 +181,41 @@ void proccesDmaData(uint8_t sign)
 }
 
 void checkForKeyWords(){					//
-	uint8_t
+	const uint8_t autoWord[] = "auto";
+	const uint8_t manWord[] = "manual";
+	const uint8_t pwmWord[] = "pwm";
+
+	int dlzka = strlen(pole);
+	for (int i = 0; i < dlzka ; i++)
+	{
+		pole[i] = tolower(pole[i]);		//da to na male
+	}
+	char *pomocny_pointer;
+
+	//checkneme hotwordy
+	if (!strcmp(pole, autoWord))
+		{
+		mode_auto = 1;
+		}
+	if (!strcmp(pole, manWord))
+		{
+		mode_auto = 0;
+		}
+
+	pomocny_pointer = strstr(pole, pwmWord);
+	char uroven[2];
+	if (pomocny_pointer != NULL)
+		{
+		if (pole[3] != 0)
+		{
+			uroven[0] =	pole[3];
+			uroven[1] = pole[4];
+		}
+		else
+			uroven[0] = pole[4];
+		pwm_cnt = atoi(uroven);
+		}
+
 }
 
 
