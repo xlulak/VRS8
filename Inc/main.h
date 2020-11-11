@@ -69,6 +69,8 @@ extern "C" {
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
+void checkForKeyWords();
+
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
@@ -87,11 +89,8 @@ void Error_Handler(void);
                                                                  0 bit  for subpriority */
 #endif
 /* USER CODE BEGIN Private defines */
-typedef struct
-{
-	uint8_t small_letter;
-	uint8_t capital_letter;
-}letter_count_;
+
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

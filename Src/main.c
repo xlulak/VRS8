@@ -148,6 +148,7 @@ void SystemClock_Config(void)
   LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_1);
 }
 
+char pole[]=" ";
 void proccesDmaData(uint8_t sign)
 {
 	/* Process received data */
@@ -156,23 +157,30 @@ void proccesDmaData(uint8_t sign)
 					start=1;
 		}
 
-		if(start==1 && sign!=0)
-		{
+		if(start==1 && sign!=0){					//nacitavanie slova
 			poc_prijatych++;
-
+			pole[poc_prijatych]=sign;
 		}
 
-		if (poc_prijatych==10 && start == 1){	//10
+		if ((poc_prijatych==10 || sign=='$') && start == 1){	//10
 					start=0;
 					poc_prijatych=0;
+					memset(pole, 0, strlen(pole));
 		}
-
 		if (start==1 && sign=='$'){				// konec
-
 					start=0;
 				}
 
 }
+
+void checkForKeyWords(){					//
+	uint8_t
+}
+
+
+
+
+
 
 /**
   * @brief  This function is executed in case of error occurrence.
