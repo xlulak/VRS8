@@ -100,7 +100,7 @@ int main(void)
 
     				  USART2_PutBuffer(final, strlen(final));
   */
-    				  LL_mDelay(800);
+    			//	  LL_mDelay(800);
   }
 
 }
@@ -154,29 +154,32 @@ void proccesDmaData(uint8_t sign)
 {
 	/* Process received data */
 		// type your algorithm here:
-		if (start==0 && sign=='$'){				// zaciatok
-					start=1;
-		}
 
-		if(start==1 && sign!=0){					//nacitavanie slova
-			poc_prijatych++;
+		if(start==1 && sign!=0 && sign !='$'){					//nacitavanie slova
+
 			pole[poc_prijatych]=sign;
+			poc_prijatych++;
 		}
 
-		if ((poc_prijatych==10 || sign=='$') && start == 1)		//ked doslo moc zbytocnych znakov / ukoncovaci
+		if ((poc_prijatych==10 || (sign=='$' && poc_prijatych<10)) && start == 1)		//ked doslo moc zbytocnych znakov / ukoncovaci
 		{
-					start=0;
+
 					poc_prijatych=0;
-					memset(pole, 0, strlen(pole));
+
 					if (sign == '$') 	//iba ked je ukoncovaci
 					{
 						checkForKeyWords();
 					}
+					memset(pole, 0, strlen(pole));
 		}
 
-		if (start==1 && sign=='$'){				// konec
-					start=0;
+
+		if (start==0 && sign=='$'){				// zaciatok
+							start=1;
 				}
+		if (start==1 &&  sign=='$'){
+			start=0;
+		}
 
 }
 

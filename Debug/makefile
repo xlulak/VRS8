@@ -46,8 +46,8 @@ zad8abc.bin \
 all: zad8abc.elf secondary-outputs
 
 # Tool invocations
-zad8abc.elf: $(OBJS) $(USER_OBJS) D:\vrs\VRS8\STM32F303K8TX_FLASH.ld
-	arm-none-eabi-gcc -o "zad8abc.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\vrs\VRS8\STM32F303K8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="zad8abc.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+zad8abc.elf: $(OBJS) $(USER_OBJS) C:\Users\jakub\STM32CubeIDE\workspace_1.4.0\zad8abc\STM32F303K8TX_FLASH.ld
+	arm-none-eabi-gcc -o "zad8abc.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\jakub\STM32CubeIDE\workspace_1.4.0\zad8abc\STM32F303K8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="zad8abc.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
