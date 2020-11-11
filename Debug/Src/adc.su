@@ -1,0 +1,7 @@
+stm32f3xx_ll_adc.h:3626:22:LL_ADC_REG_SetSequencerRanks	32	static,ignoring_inline_asm
+stm32f3xx_ll_adc.h:4830:22:LL_ADC_SetChannelSamplingTime	48	static,ignoring_inline_asm
+stm32f3xx_ll_adc.h:4980:22:LL_ADC_SetChannelSingleDiff	24	static
+stm32f3xx_ll_adc.h:7004:22:LL_ADC_DisableIT_EOC	16	static
+stm32f3xx_ll_adc.h:7015:22:LL_ADC_DisableIT_EOS	16	static
+stm32f3xx_ll_bus.h:303:22:LL_AHB1_GRP1_EnableClock	24	static
+adc.c:28:6:MX_ADC1_Init	88	static
