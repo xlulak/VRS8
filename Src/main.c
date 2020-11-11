@@ -39,10 +39,9 @@ void proccesDmaData(uint8_t sign);
 //global variables
 int start=0;
 int poc_prijatych=0;
-int poc_malych=0;
-int poc_velkych=0;
-letter_count_ nazov;
 
+int mode_auto=0;			// 0= manual 1=auto
+int pwm_cnt=0;				// PWM
 
 /**
   * @brief  The application entry point.
@@ -69,16 +68,16 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   USART2_RegisterCallback(proccesDmaData);
-
+/*
   	  	  	uint8_t tx1[] = "Buffer capacity: ";
     		uint8_t tx2[] = " bytes, occupied memory: ";
     		uint8_t tx3[] = " bytes, load [in %]: ";
     		uint8_t tx4[] = "  %\n \r";
-
+*/
     		while (1)
   {
     					USART2_CheckDmaReception();
-
+/*
     					int occupied = numOfOccupied();
     					int capacity = sizeOfBuff();
     					float occupied1 = occupied;
@@ -98,6 +97,7 @@ int main(void)
     					strcat(final,tx4);
 
     				  USART2_PutBuffer(final, strlen(final));
+  */
     				  LL_mDelay(800);
   }
 
@@ -147,46 +147,12 @@ void SystemClock_Config(void)
   LL_SetSystemCoreClock(8000000);
   LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_1);
 }
-/*
-void SystemClock_Config(void)
-{
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
 
-  if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0)
-  {
-  Error_Handler();
-  }
-  LL_RCC_HSI_Enable();
-
-
-  while(LL_RCC_HSI_IsReady() != 1)
-  {
-
-  }
-  LL_RCC_HSI_SetCalibTrimming(16);
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
-
-
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI)
-  {
-
-  }
-  LL_Init1msTick(8000000);
-  LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);
-  LL_SetSystemCoreClock(8000000);
-}
-*/
 void proccesDmaData(uint8_t sign)
 {
 	/* Process received data */
-
 		// type your algorithm here:
-
-
-		if (start==0 && sign=='#'){				// zaciatok
+		if (start==0 && sign=='$'){				// zaciatok
 					start=1;
 		}
 
@@ -194,28 +160,16 @@ void proccesDmaData(uint8_t sign)
 		{
 			poc_prijatych++;
 
-			if(sign>='A' && sign<='Z'){
-				poc_velkych++;
-			}
-			if(sign>='a' && sign<='z'){
-				poc_malych++;
-			}
 		}
 
-		if (poc_prijatych==35 && start == 1){
+		if (poc_prijatych==10 && start == 1){	//10
 					start=0;
-					poc_malych=0;
-					poc_velkych=0;
 					poc_prijatych=0;
 		}
 
 		if (start==1 && sign=='$'){				// konec
 
 					start=0;
-
-					nazov.capital_letter+=poc_velkych;
-					nazov.small_letter+=poc_malych;
-
 				}
 
 }
