@@ -40,6 +40,7 @@ void proccesDmaData(uint8_t sign);
 
 //global variables
 int start=0;
+int koniec=0;
 int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
@@ -70,16 +71,16 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   USART2_RegisterCallback(proccesDmaData);
-/*
+
   	  	  	uint8_t tx1[] = "Buffer capacity: ";
     		uint8_t tx2[] = " bytes, occupied memory: ";
     		uint8_t tx3[] = " bytes, load [in %]: ";
     		uint8_t tx4[] = "  %\n \r";
-*/
+
     		while (1)
   {
     					USART2_CheckDmaReception();
-/*
+
     					int occupied = numOfOccupied();
     					int capacity = sizeOfBuff();
     					float occupied1 = occupied;
@@ -99,8 +100,8 @@ int main(void)
     					strcat(final,tx4);
 
     				  USART2_PutBuffer(final, strlen(final));
-  */
-    			//	  LL_mDelay(800);
+
+    				  LL_mDelay(800);
   }
 
 }
@@ -156,7 +157,6 @@ void proccesDmaData(uint8_t sign)
 		// type your algorithm here:
 
 		if(start==1 && sign!=0 && sign !='$'){					//nacitavanie slova
-
 			pole[poc_prijatych]=sign;
 			poc_prijatych++;
 		}
@@ -173,13 +173,15 @@ void proccesDmaData(uint8_t sign)
 					memset(pole, 0, strlen(pole));
 		}
 
-
-		if (start==0 && sign=='$'){				// zaciatok
-							start=1;
-				}
 		if (start==1 &&  sign=='$'){
-			start=0;
-		}
+					koniec=1;
+					start=0;
+				}
+
+		if (start==0 && sign=='$' && koniec==0){				// zaciatok
+					start=1;
+				}
+
 
 }
 
@@ -199,10 +201,12 @@ void checkForKeyWords(){					//
 	if (!strcmp(pole, autoWord))
 		{
 		mode_auto = 1;
+		koniec=0;
 		}
 	if (!strcmp(pole, manWord))
 		{
 		mode_auto = 0;
+		koniec=0;
 		}
 
 	pomocny_pointer = strstr(pole, pwmWord);
@@ -217,6 +221,7 @@ void checkForKeyWords(){					//
 		else
 			uroven[0] = pole[4];
 		pwm_cnt = atoi(uroven);
+		koniec=0;
 		}
 
 }
