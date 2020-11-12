@@ -40,11 +40,10 @@ void proccesDmaData(uint8_t sign);
 
 //global variables
 int start=0;
-int koniec=0;
 int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
-int pwm_cnt=0;				// PWM
+int pwm_cnt=0;				// PWM uroven
 
 /**
   * @brief  The application entry point.
@@ -153,75 +152,83 @@ void SystemClock_Config(void)
 
 void proccesDmaData(uint8_t sign)
 {
-	/* Process received data */
-		// type your algorithm here:
+	// funkcia prijma len 1 znak, preto treba najprv prejst spracovanim
 
-		if(start==1 && sign!=0 && sign !='$'){					//nacitavanie slova
-			pole[poc_prijatych]=sign;
-			poc_prijatych++;
+		if(start == 1 && sign != 0 && sign != '$'){					//nacitavanie slova -> ignoruje prazdne znaky a startovaci/konecny
+			pole[poc_prijatych] = sign;								//pridaj do nacitavaneho pola novy znak
+			poc_prijatych++;										//pridaj pocet prijatych
 		}
 
-		if ((poc_prijatych==10 || (sign=='$' && poc_prijatych<10)) && start == 1)		//ked doslo moc zbytocnych znakov / ukoncovaci
+		if (sign=='$' && start == 1)
 		{
 
-					poc_prijatych=0;
-
-					if (sign == '$') 	//iba ked je ukoncovaci
-					{
-						checkForKeyWords();
-					}
-					memset(pole, 0, strlen(pole));
+			poc_prijatych=0;					//vynuluje pocet prijatych
+			checkForKeyWords();					//skontroluje, ci nebolo prijate nieco na zmenu nastaveni
+			memset(pole, 0, strlen(pole));		//vymaze prijate pole
+			start = 0;							//vypne signalizaciu prijatia prveho znaku
+			return;								//vypne vykonavanie funkcie, kedze preslo kontrolou
 		}
 
-		if (start==1 &&  sign=='$'){
-					koniec=1;
-					start=0;
-				}
+		if (poc_prijatych == 10 && start == 1)	//timeout -> prisli zbytocne znaky
+		{
+			poc_prijatych=0;					//vynuluje pocet prijatych
+			start = 0;							//vypne signalizaciu prijatia prveho znaku
+			memset(pole, 0, strlen(pole));		//vymaze prijate pole
+			return;								//vypne vykonavanie funkcie, kedze dosiel timeout
+		}
 
-		if (start==0 && sign=='$' && koniec==0){				// zaciatok
-					start=1;
-				}
+		if (start==0 && sign=='$')				// prisiel prvy znak a este nie je zapnuty start
+		{
+			start=1;							//zapni start
+		}
 
 
 }
 
-void checkForKeyWords(){					//
+void checkForKeyWords()
+{
+	//kontroluje keywordy auto, manual a pwmXX
+
+	//konstantne polia znakov, ktore su keywordami
 	const uint8_t autoWord[] = "auto";
 	const uint8_t manWord[] = "manual";
 	const uint8_t pwmWord[] = "pwm";
 
+	//premena pola na male znaky, aby to nebolo case sensitive
 	int dlzka = strlen(pole);
 	for (int i = 0; i < dlzka ; i++)
 	{
-		pole[i] = tolower(pole[i]);		//da to na male
+		pole[i] = tolower(pole[i]);		//tolower zmeni pismenka na male, ostatne cleny (cisla, znamienka ignoruje)
 	}
-	char *pomocny_pointer;
+
+
 
 	//checkneme hotwordy
-	if (!strcmp(pole, autoWord))
+	if (!strcmp(pole, autoWord))		//check ak pride auto
 		{
-		mode_auto = 1;
-		koniec=0;
+		mode_auto = 1;					//tak zapni auto rezim
 		}
-	if (!strcmp(pole, manWord))
+	if (!strcmp(pole, manWord))			//ak pride manual
 		{
-		mode_auto = 0;
-		koniec=0;
+		mode_auto = 0;					//tak vypni auto rezim
 		}
 
-	pomocny_pointer = strstr(pole, pwmWord);
+	//pomocne na vykonanie PWM checku
+	char *pomocny_pointer;
 	char uroven[2];
-	if (pomocny_pointer != NULL)
+
+	pomocny_pointer = strstr(pole, pwmWord);	//vrati pointer na lokaciu stringu pwmWord v poli, ak tam nie je da NULL
+
+	if (pomocny_pointer != NULL)				//neni null, tak znamena ze command PWM bol najdeny
 		{
-		if (pole[3] != 0)
+		if (pole[3] != '0')						//ak neni stvrty znak 0 tak nacita obe cisla		pwm -> pole[0],pole[1],pole[2]; pole[3] je teda prve cislo
 		{
 			uroven[0] =	pole[3];
 			uroven[1] = pole[4];
 		}
 		else
-			uroven[0] = pole[4];
-		pwm_cnt = atoi(uroven);
-		koniec=0;
+			uroven[0] = pole[4];				//ak nahodou to bola nula, precita len druhe -> napr z 08 tak precita len 8
+		pwm_cnt = atoi(uroven);					//premeni na int a ulozi to globalnej premennej pwm_cnt
 		}
 
 }
