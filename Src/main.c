@@ -43,7 +43,7 @@ int start=0;
 int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
-int pwm_cnt=50;		// PWM uroven
+int pwm_cnt=50;				// PWM uroven
 float voltage=0;
 int pom=0;
 /**

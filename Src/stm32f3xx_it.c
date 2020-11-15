@@ -260,7 +260,7 @@ void TIM2_IRQHandler(void)
 			voltage = ADC_convertedValue2float();
 		}
 
-		LL_TIM_ClearFlag_UPDATE(TIM2);
+
 
 		if(LL_TIM_IsActiveFlag_UPDATE(TIM2))
 			{
@@ -271,6 +271,7 @@ void TIM2_IRQHandler(void)
 				else
 				{
 					LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);
+					pom=pom*pom;
 				}
 
 				ADC_start_conversion();
@@ -278,6 +279,7 @@ void TIM2_IRQHandler(void)
 			}
 
 			LL_TIM_ClearFlag_UPDATE(TIM2);
+			//LL_TIM_ClearFlag_UPDATE(TIM2);
 }
 
 void USART2_IRQHandler(void)
