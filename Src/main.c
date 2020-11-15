@@ -43,8 +43,9 @@ int start=0;
 int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
-int pwm_cnt=0;				// PWM uroven
-
+int pwm_cnt=50;		// PWM uroven
+float voltage=0;
+int pom=0;
 /**
   * @brief  The application entry point.
   * @retval int
@@ -78,8 +79,8 @@ int main(void)
 
     		while (1)
   {
-    					USART2_CheckDmaReception();
-
+    					//USART2_CheckDmaReception();
+    					/*
     					int occupied = numOfOccupied();
     					int capacity = sizeOfBuff();
     					float occupied1 = occupied;
@@ -99,8 +100,9 @@ int main(void)
     					strcat(final,tx4);
 
     				  USART2_PutBuffer(final, strlen(final));
+    					 */
 
-    				  LL_mDelay(800);
+    				//  LL_mDelay(1);
   }
 
 }
@@ -149,6 +151,10 @@ void SystemClock_Config(void)
   LL_SetSystemCoreClock(8000000);
   LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_1);
 }
+
+
+
+
 
 void proccesDmaData(uint8_t sign)
 {

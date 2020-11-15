@@ -22,6 +22,9 @@
 #include "main.h"
 #include "usart.h"
 #include "stm32f3xx_it.h"
+
+extern float voltage;
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -232,14 +235,49 @@ void DMA1_Channel7_IRQHandler(void)
 /**
   * @brief This function handles TIM2 global interrupt.
   */
+void setDutyCycle(uint8_t D){
+	TIM2->CCR1=D;										//nasavím presnú hodnotu pwm
+}
+extern int pwm_cnt;
+extern int pom;
 void TIM2_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM2_IRQn 0 */
 
-  /* USER CODE END TIM2_IRQn 0 */
-  /* USER CODE BEGIN TIM2_IRQn 1 */
+	setDutyCycle(pwm_cnt);
+	pom++;
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM2))
+		{
+			if(LL_GPIO_IsOutputPinSet(GPIOA, LL_GPIO_PIN_5))
+			{
+				LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_5);
+			}
+			else
+			{
+				LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_5);
+			}
 
-  /* USER CODE END TIM2_IRQn 1 */
+			ADC_start_conversion();
+			voltage = ADC_convertedValue2float();
+		}
+
+		LL_TIM_ClearFlag_UPDATE(TIM2);
+
+		if(LL_TIM_IsActiveFlag_UPDATE(TIM2))
+			{
+				if(LL_GPIO_IsOutputPinSet(GPIOB, LL_GPIO_PIN_3))
+				{
+					LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3);
+				}
+				else
+				{
+					LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);
+				}
+
+				ADC_start_conversion();
+				voltage = ADC_convertedValue2float();
+			}
+
+			LL_TIM_ClearFlag_UPDATE(TIM2);
 }
 
 void USART2_IRQHandler(void)

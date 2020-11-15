@@ -38,29 +38,37 @@ void MX_TIM2_Init(void)
   NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
   NVIC_EnableIRQ(TIM2_IRQn);
 
-  TIM_InitStruct.Prescaler = 0;
+  TIM_InitStruct.Prescaler = 79999 ;								// 7999 = 1kHz -> 79 999 = 100 Hz
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 0;
-  TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
-  LL_TIM_Init(TIM2, &TIM_InitStruct);
-  LL_TIM_DisableARRPreload(TIM2);
-  LL_TIM_SetClockSource(TIM2, LL_TIM_CLOCKSOURCE_INTERNAL);
-  LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1);
+  TIM_InitStruct.Autoreload = 99;									//	ked tak zmenit
+  TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;			// ok
+  LL_TIM_Init(TIM2, &TIM_InitStruct);								// ok
+  LL_TIM_DisableARRPreload(TIM2);							//V masterovi je to zakomentovane (in case)
+  //LL_TIM_EnableARRPreload(TIM2);
+  LL_TIM_SetClockSource(TIM2, LL_TIM_CLOCKSOURCE_INTERNAL);			// ok
+  LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1);				// toto neni v masterovi
   TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_PWM1;
   TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_DISABLE;
   TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;
+
   TIM_OC_InitStruct.CompareValue = 0;
   TIM_OC_InitStruct.OCPolarity = LL_TIM_OCPOLARITY_HIGH;
   LL_TIM_OC_Init(TIM2, LL_TIM_CHANNEL_CH1, &TIM_OC_InitStruct);
   LL_TIM_OC_DisableFast(TIM2, LL_TIM_CHANNEL_CH1);
-  TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_FROZEN;
-  TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_DISABLE;
-  TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;
+  //CH2
+  TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_FROZEN;					// = LL_TIM_OCMODE_ACTIVE
+  TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_DISABLE;				//ok
+  TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;				//ok
+
   LL_TIM_OC_Init(TIM2, LL_TIM_CHANNEL_CH2, &TIM_OC_InitStruct);
   LL_TIM_OC_DisableFast(TIM2, LL_TIM_CHANNEL_CH2);
   LL_TIM_SetTriggerOutput(TIM2, LL_TIM_TRGO_RESET);
-  LL_TIM_DisableMasterSlaveMode(TIM2);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+  LL_TIM_DisableMasterSlaveMode(TIM2);								//ok
+  LL_TIM_EnableIT_UPDATE(TIM2);
+  LL_TIM_EnableCounter(TIM2);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);				//ok
+
+
     /**TIM2 GPIO Configuration
     PA5     ------> TIM2_CH1
     */
@@ -71,7 +79,6 @@ void MX_TIM2_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 1 */

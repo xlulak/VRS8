@@ -67,9 +67,32 @@ void MX_ADC1_Init(void)
   LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_1);
   LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_1, LL_ADC_SAMPLINGTIME_1CYCLE_5);
   LL_ADC_SetChannelSingleDiff(ADC1, LL_ADC_CHANNEL_1, LL_ADC_SINGLE_ENDED);
-
+  LL_ADC_Enable(ADC1);
 }
 
+void ADC_start_conversion(void)
+{
+	if ((LL_ADC_IsEnabled(ADC1) == 1)             &&
+	  (LL_ADC_IsDisableOngoing(ADC1) == 0)        &&
+	  (LL_ADC_REG_IsConversionOngoing(ADC1) == 0)   )
+	{
+		LL_ADC_REG_StartConversion(ADC1);
+	}
+	else
+	{
+		/**/
+	}
+
+	while (LL_ADC_IsActiveFlag_EOC(ADC1) == 0){}
+
+	LL_ADC_ClearFlag_EOC(ADC1);
+}
+
+
+float ADC_convertedValue2float(void)
+{
+	return (ADC1->DR/4097.0f)*3.3f;
+}
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

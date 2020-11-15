@@ -68,7 +68,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-
+void setDutyCycle(uint8_t D);
 void checkForKeyWords();
 
 /* USER CODE BEGIN EFP */

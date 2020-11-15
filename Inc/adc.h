@@ -35,7 +35,8 @@
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
-
+float ADC_convertedValue2float(void);
+void ADC_start_conversion(void);
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */
