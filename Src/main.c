@@ -43,7 +43,7 @@ int start=0;
 int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
-int pwm_cnt=50;				// PWM uroven
+int pwm_cnt=0;				// PWM uroven
 int CH1_DC = 0;
 int pom=0;
 /**
@@ -77,7 +77,6 @@ int main(void)
 
     		while (1)
   {
-
     					//USART2_CheckDmaReception();
     					/*
     					int occupied = numOfOccupied();
@@ -99,18 +98,31 @@ int main(void)
     					strcat(final,tx4);
     				    USART2_PutBuffer(final, strlen(final));
     					 */
-    			while(CH1_DC < 100)
-    			    	{
+    			if (mode_auto == 1){
 
+    				while(CH1_DC < 99)
+    			    	{
     			    	    CH1_DC += 1;
     			    	    LL_mDelay(10);
     			    	}
-    			    	while(CH1_DC > 0)
+    			    	while(CH1_DC >= 0)
     			    	{
-
     			    	    CH1_DC -= 1;
     			    	    LL_mDelay(10);
     			    	}
+
+    			} else{
+    										while(CH1_DC < 99)
+    				    			    	{
+    				    			    	    CH1_DC += 1;
+    				    			    	    LL_mDelay(10);
+    				    			    	}
+    				    			    	while(CH1_DC >= pwm_cnt)
+    				    			    	{
+    				    			    	    CH1_DC -= 1;
+    				    			    	    LL_mDelay(10);
+    				    			    	}
+    			}
   }
 
 }
