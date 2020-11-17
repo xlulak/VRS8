@@ -38,7 +38,7 @@ void MX_TIM2_Init(void)
   NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
   NVIC_EnableIRQ(TIM2_IRQn);
 
-  TIM_InitStruct.Prescaler = 79999 ;								// 7999 = 1kHz -> 79 999 = 100 Hz
+  TIM_InitStruct.Prescaler = 799 ;								// 7999 = 1kHz -> 79 999 = 100 Hz
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 99;									//	ked tak zmenit
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;			// ok

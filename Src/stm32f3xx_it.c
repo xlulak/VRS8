@@ -238,24 +238,24 @@ void DMA1_Channel7_IRQHandler(void)
 void setDutyCycle(uint8_t D){
 	TIM2->CCR1=D;									//nasavím presnú hodnotu pwm
 }
-extern int pwm_cnt;
+extern int CH1_DC;
 extern int pom;
 void TIM2_IRQHandler(void)
 {
 
-	setDutyCycle(pwm_cnt);
+	setDutyCycle(CH1_DC);
 
 		if(LL_TIM_IsActiveFlag_UPDATE(TIM2))
 			{
 				if(LL_GPIO_IsOutputPinSet(GPIOB, LL_GPIO_PIN_3))
 				{
 					LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3);
-					pom=2;
+					pom++;
 				}
 				else
 				{
 					LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);
-					pom=1;
+					pom++;
 				}
 			}
 

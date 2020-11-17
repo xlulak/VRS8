@@ -60,10 +60,8 @@ int main(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
   NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
   /* Configure the system clock */
   SystemClock_Config();
-
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
@@ -72,13 +70,14 @@ int main(void)
   MX_TIM2_Init();
   USART2_RegisterCallback(proccesDmaData);
 
-  	  	  	uint8_t tx1[] = "Buffer capacity: ";
-    		uint8_t tx2[] = " bytes, occupied memory: ";
-    		uint8_t tx3[] = " bytes, load [in %]: ";
-    		uint8_t tx4[] = "  %\n \r";
+  	  	//	uint8_t tx1[] = "Buffer capacity: ";
+    	//	uint8_t tx2[] = " bytes, occupied memory: ";
+    	//	uint8_t tx3[] = " bytes, load [in %]: ";
+    	//	uint8_t tx4[] = "  %\n \r";
 
     		while (1)
   {
+
     					//USART2_CheckDmaReception();
     					/*
     					int occupied = numOfOccupied();
@@ -98,23 +97,20 @@ int main(void)
     					gcvt(percentage, 4, pomoc3);
     					strcat(final,pomoc3);
     					strcat(final,tx4);
-
-    				  USART2_PutBuffer(final, strlen(final));
+    				    USART2_PutBuffer(final, strlen(final));
     					 */
-
     			while(CH1_DC < 100)
     			    	{
-    			    	    TIM2->CCR1 = CH1_DC;
+
     			    	    CH1_DC += 1;
     			    	    LL_mDelay(1);
     			    	}
     			    	while(CH1_DC > 0)
     			    	{
-    			    	    TIM2->CCR1 = CH1_DC;
+
     			    	    CH1_DC -= 1;
     			    	    LL_mDelay(1);
     			    	}
-    			LL_mDelay(1);
   }
 
 }
