@@ -42,7 +42,7 @@ void proccesDmaData(uint8_t sign);
 int start=0;
 int poc_prijatych=0;
 uint8_t pole[10];
-int mode_auto=0;			// 0= manual 1=auto
+int mode_auto=1;			// 0= manual 1=auto
 int pwm_cnt=0;				// PWM uroven
 int CH1_DC = 0;
 int pom=0;
@@ -231,6 +231,7 @@ void checkForKeyWords()
 	if (!strcmp(pole, autoWord))		//check ak pride auto
 		{
 		mode_auto = 1;					//tak zapni auto rezim
+		pwm_cnt=0;						// ked prepneme na auto bude 0
 		}
 	if (!strcmp(pole, manWord))			//ak pride manual
 		{
@@ -243,7 +244,7 @@ void checkForKeyWords()
 
 	pomocny_pointer = strstr(pole, pwmWord);	//vrati pointer na lokaciu stringu pwmWord v poli, ak tam nie je da NULL
 
-	if (pomocny_pointer != NULL)				//neni null, tak znamena ze command PWM bol najdeny
+	if ((pomocny_pointer != NULL) && (mode_auto == 0))				//neni null, tak znamena ze command PWM bol najdeny + ak sme v manualnom mode
 		{
 		if (pole[3] != '0')						//ak neni stvrty znak 0 tak nacita obe cisla		pwm -> pole[0],pole[1],pole[2]; pole[3] je teda prve cislo
 		{
