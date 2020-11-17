@@ -44,7 +44,7 @@ int poc_prijatych=0;
 uint8_t pole[10];
 int mode_auto=0;			// 0= manual 1=auto
 int pwm_cnt=50;				// PWM uroven
-float voltage=0;
+int CH1_DC = 0;
 int pom=0;
 /**
   * @brief  The application entry point.
@@ -68,7 +68,7 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
-  MX_ADC1_Init();
+  //MX_ADC1_Init();
   MX_TIM2_Init();
   USART2_RegisterCallback(proccesDmaData);
 
@@ -102,7 +102,19 @@ int main(void)
     				  USART2_PutBuffer(final, strlen(final));
     					 */
 
-    				//  LL_mDelay(1);
+    			while(CH1_DC < 100)
+    			    	{
+    			    	    TIM2->CCR1 = CH1_DC;
+    			    	    CH1_DC += 1;
+    			    	    LL_mDelay(1);
+    			    	}
+    			    	while(CH1_DC > 0)
+    			    	{
+    			    	    TIM2->CCR1 = CH1_DC;
+    			    	    CH1_DC -= 1;
+    			    	    LL_mDelay(1);
+    			    	}
+    			LL_mDelay(1);
   }
 
 }

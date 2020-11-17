@@ -43,27 +43,20 @@ void MX_TIM2_Init(void)
   TIM_InitStruct.Autoreload = 99;									//	ked tak zmenit
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;			// ok
   LL_TIM_Init(TIM2, &TIM_InitStruct);								// ok
-  LL_TIM_DisableARRPreload(TIM2);							//V masterovi je to zakomentovane (in case)
-  //LL_TIM_EnableARRPreload(TIM2);
+  //LL_TIM_DisableARRPreload(TIM2);							//V masterovi je to zakomentovane (in case)
+  LL_TIM_EnableARRPreload(TIM2);
   LL_TIM_SetClockSource(TIM2, LL_TIM_CLOCKSOURCE_INTERNAL);			// ok
   LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1);				// toto neni v masterovi
   TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_PWM1;
   TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_DISABLE;
   TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;
 
-  TIM_OC_InitStruct.CompareValue = 99;
+  TIM_OC_InitStruct.CompareValue = 40;
   TIM_OC_InitStruct.OCPolarity = LL_TIM_OCPOLARITY_HIGH;
   LL_TIM_OC_Init(TIM2, LL_TIM_CHANNEL_CH1, &TIM_OC_InitStruct);
   LL_TIM_OC_DisableFast(TIM2, LL_TIM_CHANNEL_CH1);
 
-
   //CH2
-  TIM_InitStruct.Prescaler = 7999;									//1Khz
-  TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 9;									//	10ms
-  TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;			// ok
-  LL_TIM_Init(TIM2, &TIM_InitStruct);								// ok
-
   TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_FROZEN;					// = LL_TIM_OCMODE_ACTIVE
   TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_DISABLE;				//ok
   TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;				//ok
