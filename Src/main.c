@@ -70,34 +70,32 @@ int main(void)
   MX_TIM2_Init();
   USART2_RegisterCallback(proccesDmaData);
 
-  	  	//	uint8_t tx1[] = "Buffer capacity: ";
-    	//	uint8_t tx2[] = " bytes, occupied memory: ";
-    	//	uint8_t tx3[] = " bytes, load [in %]: ";
-    	//	uint8_t tx4[] = "  %\n \r";
-
+  	  		uint8_t tx1[] = "Current mode: ";
+    		uint8_t tx2[] = " PWM: ";
+    		uint8_t tx3[] = "[in %]\n \r";
+    		uint8_t autovypis[] = "auto";
+    		uint8_t manvypis[] = "manual";
+    		uint8_t pwmvypis[10];
+    		uint8_t final[50];
     		while (1)
   {
-    					//USART2_CheckDmaReception();
-    					/*
-    					int occupied = numOfOccupied();
-    					int capacity = sizeOfBuff();
-    					float occupied1 = occupied;
-    					float percentage = occupied1/capacity*100.0;
-    					uint8_t final[100];
-    					uint8_t pomoc1[10],pomoc2[10],pomoc3[10];
+    					USART2_CheckDmaReception();
     					memset(final,0,sizeof(final));
-    					itoa(capacity,pomoc1,10);
     					strcpy(final,tx1);
-    					strcat(final, pomoc1);
-    					itoa(occupied,pomoc2,10);
+    					if (mode_auto == 1)
+    					{
+    						strcat(final,autovypis);
+    					}
+    					else
+    					{
+    						strcat(final,manvypis);
+    					}
     					strcat(final,tx2);
-    					strcat(final, pomoc2);
+    					itoa(pwm_cnt,pwmvypis,10);
+    					strcat(final,pwmvypis);
     					strcat(final,tx3);
-    					gcvt(percentage, 4, pomoc3);
-    					strcat(final,pomoc3);
-    					strcat(final,tx4);
     				    USART2_PutBuffer(final, strlen(final));
-    					 */
+
     			if (mode_auto == 1){
 
     				while(CH1_DC < 99)
