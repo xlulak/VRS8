@@ -103,13 +103,13 @@ int main(void)
     			    	{
 
     			    	    CH1_DC += 1;
-    			    	    LL_mDelay(1);
+    			    	    LL_mDelay(10);
     			    	}
     			    	while(CH1_DC > 0)
     			    	{
 
     			    	    CH1_DC -= 1;
-    			    	    LL_mDelay(1);
+    			    	    LL_mDelay(10);
     			    	}
   }
 
